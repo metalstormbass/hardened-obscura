@@ -1,0 +1,60 @@
+name: Obscura CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    name: Repo hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chainguard-actions/actions-checkout@ec419da8013e66e059571719dbfa6d1483438668 # v7.0.1
+        # originally - uses: actions/checkout@v7
+
+      - name: Spell check
+        uses: chainguard-actions/crate-ci-typos@e069b15869a17c6f5d9e2d951c06fcccc248b1a5 # v1.49.0
+        # originally - uses: crate-ci/typos@v1.49.0
+        with:
+          config: .typos.toml
+
+      - name: Verify required files exist
+        uses: chainguard-actions/andstor-file-existence-action@4333b69cff4f5e158117ec7caa497fc0d8c6234f # v3.1.0
+        # originally - uses: andstor/file-existence-action@v3.1.0
+        with:
+          files: "config/release.yaml, templates/report.md.tpl, docs/notes.md"
+          fail: true
+
+  release-metadata:
+    name: Release metadata
+    runs-on: ubuntu-latest
+    needs: hygiene
+    steps:
+      - uses: chainguard-actions/actions-checkout@ec419da8013e66e059571719dbfa6d1483438668 # v7.0.1
+        # originally - uses: actions/checkout@v7
+
+      - name: Read release version with yq
+        id: version
+        uses: chainguard-actions/mikefarah-yq@2b70269397dc80593071c921ebdf559afe5aea7c # v4.53.3
+        # originally - uses: mikefarah/yq@v4.53.3
+        with:
+          cmd: yq '.release.version' config/release.yaml
+
+      - name: Render build report
+        uses: chainguard-actions/chuhlomin-render-template@b26f3d75bfa3878230f2a7aa101b39000a7331c1 # v1.12
+        # originally - uses: chuhlomin/render-template@v1.12
+        with:
+          template: templates/report.md.tpl
+          result_path: build-report.md
+          vars: |
+            repo: ${{ github.repository }}
+            sha: ${{ github.sha }}
+            version: ${{ steps.version.outputs.result }}
+
+      - name: Show build report
+        run: cat build-report.md

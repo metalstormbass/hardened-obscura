@@ -1,0 +1,47 @@
+name: Media pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  transcode:
+    name: Transcode sample media
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free disk space
+        uses: chainguard-actions/jlumbroso-free-disk-space@52482bc28020afba6a8cbc838b7ddbd9ab5dedc3 # v1.3.1
+        # originally - uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: false
+          dotnet: false
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: true
+
+      - name: Set up FFmpeg
+        uses: chainguard-actions/AnimMouse-setup-ffmpeg@34ee4b393c648bc7ef4251a66605d68655afad39 # v1.2.5
+        # originally - uses: AnimMouse/setup-ffmpeg@v1.2.5
+
+      - name: Download sample video
+        id: download
+        uses: chainguard-actions/carlosperate-download-file-action@7d29a337a557bad2ba563110768bc362badbd9a7 # v2.0.3
+        # originally - uses: carlosperate/download-file-action@v2.0.3
+        with:
+          file-url: https://raw.githubusercontent.com/mathiasbynens/small/master/Mpeg4.mp4
+          file-name: sample.mp4
+          location: downloads
+
+      - name: Probe and transcode
+        env:
+          SAMPLE_PATH: ${{ steps.download.outputs.file-path }}
+        run: |
+          mkdir -p out
+          ffprobe -hide_banner "$SAMPLE_PATH"
+          ffmpeg -hide_banner -f lavfi -i testsrc=duration=2:size=320x240:rate=24 out/testcard.mp4
+          ffprobe -hide_banner out/testcard.mp4

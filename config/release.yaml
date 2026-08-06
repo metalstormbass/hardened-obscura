@@ -1,0 +1,9 @@
+release:
+  name: hardened-obscura
+  version: 0.1.0
+  channel: stable
+  components:
+    - name: demo
+      enabled: true
+    - name: telemetry
+      enabled: false

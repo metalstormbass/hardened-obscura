@@ -1,0 +1,6 @@
+[files]
+extend-exclude = ["*.tpl"]
+
+[default.extend-words]
+# project name is intentional
+obscura = "obscura"

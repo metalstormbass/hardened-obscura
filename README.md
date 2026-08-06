@@ -20,7 +20,7 @@ upstream tag preserved as a comment per the Chainguard migration guidance.
 | `chuhlomin-render-template` | chuhlomin/render-template | v1.12 | mutable Docker tag pinned to immutable image digest |
 | `jlumbroso-free-disk-space` | jlumbroso/free-disk-space | v1.3.1 | 8 high-severity script-injection findings fixed (raw `${{ inputs.* }}` in shell conditions moved to quoted env vars) |
 | `AnimMouse-setup-ffmpeg` | AnimMouse/setup-ffmpeg | v1.2.5 | 6 findings fixed: unpinned refs, `$GITHUB_OUTPUT` injection, unquoted shell expansions |
-| `carlosperate-download-file-action` | carlosperate/download-file-action | v2.0.3 | clean pass (0 findings) |
+| `carlosperate-download-file-action` | carlosperate/download-file-action | v2.0.2 | clean pass (0 findings); v2.0.3 hardened build is broken (ESM/CJS phone-home bug) |
 | `actions-checkout` | actions/checkout | v7.0.1 | 7 findings fixed in CI workflows: script injection, unpinned refs, missing permissions |
 
 ## Workflows

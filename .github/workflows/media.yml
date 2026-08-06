@@ -30,8 +30,10 @@ jobs:
 
       - name: Download sample video
         id: download
-        uses: chainguard-actions/carlosperate-download-file-action@7d29a337a557bad2ba563110768bc362badbd9a7 # v2.0.3
-        # originally - uses: carlosperate/download-file-action@v2.0.3
+        uses: chainguard-actions/carlosperate-download-file-action@c1c5aa30bf5d07d4944d58c7700591fa69849c07 # v2.0.2
+        # originally - uses: carlosperate/download-file-action@v2.0.2
+        # note: hardened v2.0.3 is broken — chainguard-phonehome.js uses require()
+        # but upstream v2.0.3 switched package.json to "type": "module"
         with:
           file-url: https://raw.githubusercontent.com/mathiasbynens/small/master/Mpeg4.mp4
           file-name: sample.mp4

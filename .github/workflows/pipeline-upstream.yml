@@ -1,0 +1,98 @@
+name: Pipeline (upstream actions)
+
+# Identical pipeline to pipeline-hardened.yml, but using the original
+# upstream community actions referenced by mutable tags — the "before"
+# picture of a typical workflow prior to migrating to Chainguard
+# hardened actions.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    name: Repo hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Spell check
+        uses: crate-ci/typos@v1.49.0
+        with:
+          config: .typos.toml
+
+      - name: Verify required files exist
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "config/release.yaml, templates/report.md.tpl, docs/notes.md"
+          fail: true
+
+  release-metadata:
+    name: Release metadata
+    runs-on: ubuntu-latest
+    needs: hygiene
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Read release version with yq
+        id: version
+        uses: mikefarah/yq@v4.53.3
+        with:
+          cmd: yq '.release.version' config/release.yaml
+
+      - name: Render build report
+        uses: chuhlomin/render-template@v1.12
+        with:
+          template: templates/report.md.tpl
+          result_path: build-report.md
+          vars: |
+            repo: ${{ github.repository }}
+            sha: ${{ github.sha }}
+            version: ${{ steps.version.outputs.result }}
+
+      - name: Show build report
+        run: cat build-report.md
+
+  transcode:
+    name: Transcode sample media
+    runs-on: ubuntu-latest
+    needs: hygiene
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: false
+          dotnet: false
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: true
+
+      - name: Set up FFmpeg
+        uses: AnimMouse/setup-ffmpeg@v1
+        with:
+          # "release" resolves to FFmpeg 9.0, which BtbN/FFmpeg-Builds does
+          # not publish yet; pin to a version with published Linux builds
+          version: "8.1"
+
+      - name: Download sample video
+        id: download
+        uses: carlosperate/download-file-action@v2
+        with:
+          file-url: https://raw.githubusercontent.com/mathiasbynens/small/master/Mpeg4.mp4
+          file-name: sample.mp4
+          location: downloads
+
+      - name: Probe and transcode
+        env:
+          SAMPLE_PATH: ${{ steps.download.outputs.file-path }}
+        run: |
+          mkdir -p out
+          ffprobe -hide_banner "$SAMPLE_PATH"
+          ffmpeg -hide_banner -f lavfi -i testsrc=duration=2:size=320x240:rate=24 out/testcard.mp4
+          ffprobe -hide_banner out/testcard.mp4

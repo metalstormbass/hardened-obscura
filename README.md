@@ -25,11 +25,16 @@ upstream tag preserved as a comment per the Chainguard migration guidance.
 
 ## Workflows
 
-- **`ci.yml`** — spell-checks the repo (`typos`), verifies required files
-  exist, reads the release version out of `config/release.yaml` with `yq`,
-  and renders `templates/report.md.tpl` into a build report.
-- **`media.yml`** — frees runner disk space, installs FFmpeg, downloads a
-  sample video, and probes/transcodes it.
+Two workflow files run the **same pipeline** — spell check (`typos`),
+required-file verification, `yq` release-version extraction, template
+rendering, and an FFmpeg media job — so the before/after can be compared
+side by side:
+
+- **`pipeline-upstream.yml`** — the "before": original upstream community
+  actions, referenced by mutable tags.
+- **`pipeline-hardened.yml`** — the "after": Chainguard hardened
+  equivalents, pinned to immutable commit SHAs with the upstream tag
+  preserved as a comment.
 
 ## Notes
 

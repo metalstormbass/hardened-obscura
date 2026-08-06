@@ -1,0 +1,13 @@
+# Chainguard Guardener — Hardened Actions
+# https://edu.chainguard.dev/chainguard/guardener/github/actions-security/
+#
+# enabled: posts non-blocking PR review comments recommending hardened,
+# SHA-pinned chainguard-actions equivalents on any PR that touches
+# .github/workflows/.
+# migrate: keeps a single automated migration pull request open that
+# replaces upstream actions (e.g. in pipeline-upstream.yml) with their
+# Chainguard equivalents, refreshed daily.
+enabled: true
+migrate:
+  enabled: true
+  period: "24h"

@@ -79,26 +79,10 @@ jobs:
         uses: chainguard-actions/AnimMouse-setup-ffmpeg@34ee4b393c648bc7ef4251a66605d68655afad39 # v1.2.5
         # originally - uses: AnimMouse/setup-ffmpeg@v1.2.5
         with:
-          # "release" resolves to FFmpeg 9.0, which BtbN/FFmpeg-Builds does
-          # not publish yet; pin to a version with published Linux builds
           version: "8.1"
 
-      - name: Download sample video
-        id: download
-        uses: chainguard-actions/carlosperate-download-file-action@c1c5aa30bf5d07d4944d58c7700591fa69849c07 # v2.0.2
-        # originally - uses: carlosperate/download-file-action@v2.0.2
-        # note: hardened v2.0.3 is broken — chainguard-phonehome.js uses require()
-        # but upstream v2.0.3 switched package.json to "type": "module"
-        with:
-          file-url: https://raw.githubusercontent.com/mathiasbynens/small/master/Mpeg4.mp4
-          file-name: sample.mp4
-          location: downloads
-
-      - name: Probe and transcode
-        env:
-          SAMPLE_PATH: ${{ steps.download.outputs.file-path }}
+      - name: Generate and probe test video
         run: |
           mkdir -p out
-          ffprobe -hide_banner "$SAMPLE_PATH"
           ffmpeg -hide_banner -f lavfi -i testsrc=duration=2:size=320x240:rate=24 out/testcard.mp4
           ffprobe -hide_banner out/testcard.mp4

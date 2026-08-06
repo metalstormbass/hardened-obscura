@@ -20,7 +20,6 @@ upstream tag preserved as a comment per the Chainguard migration guidance.
 | `chuhlomin-render-template` | chuhlomin/render-template | v1.12 | mutable Docker tag pinned to immutable image digest | [HARDENING.md](https://github.com/chainguard-actions/chuhlomin-render-template/blob/b26f3d75bfa3878230f2a7aa101b39000a7331c1/HARDENING.md) |
 | `jlumbroso-free-disk-space` | jlumbroso/free-disk-space | v1.3.1 | 8 high-severity script-injection findings fixed (raw `${{ inputs.* }}` in shell conditions moved to quoted env vars) | [HARDENING.md](https://github.com/chainguard-actions/jlumbroso-free-disk-space/blob/52482bc28020afba6a8cbc838b7ddbd9ab5dedc3/HARDENING.md) |
 | `AnimMouse-setup-ffmpeg` | AnimMouse/setup-ffmpeg | v1.2.5 | 6 findings fixed: unpinned refs, `$GITHUB_OUTPUT` injection, unquoted shell expansions | [HARDENING.md](https://github.com/chainguard-actions/AnimMouse-setup-ffmpeg/blob/34ee4b393c648bc7ef4251a66605d68655afad39/HARDENING.md) |
-| `carlosperate-download-file-action` | carlosperate/download-file-action | v2.0.2 | clean pass (0 findings); v2.0.3 hardened build is broken (ESM/CJS phone-home bug) | [HARDENING.md](https://github.com/chainguard-actions/carlosperate-download-file-action/blob/c1c5aa30bf5d07d4944d58c7700591fa69849c07/HARDENING.md) |
 | `actions-checkout` | actions/checkout | v7.0.1 | 7 findings fixed in CI workflows: script injection, unpinned refs, missing permissions | [HARDENING.md](https://github.com/chainguard-actions/actions-checkout/blob/ec419da8013e66e059571719dbfa6d1483438668/HARDENING.md) |
 
 Each report link points at the exact commit the workflows pin, so the
@@ -30,7 +29,8 @@ report always describes the code that actually runs.
 
 Two workflow files run the **same pipeline** — spell check (`typos`),
 required-file verification, `yq` release-version extraction, template
-rendering, and an FFmpeg media job — so the before/after can be compared
+rendering, and a media job that frees runner disk space, installs FFmpeg,
+and generates/probes a test video — so the before/after can be compared
 side by side:
 
 - **`pipeline-upstream.yml`** — the "before": original upstream community

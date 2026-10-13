@@ -38,6 +38,13 @@ jobs:
       - uses: chainguard-actions/actions-checkout@v7.0.1
         # originally - uses: actions/checkout@v7
 
+      - name: Install Crane
+        uses: chainguard-actions/imjasonh-setup-crane@v0.5
+        # originally - uses: imjasonh/setup-crane@6da1ae018866400525525ce74ff892880c099987 # v0.5
+
+      - name: Show crane version
+        run: crane version
+
       - name: Read release version with yq
         id: version
         uses: chainguard-actions/mikefarah-yq@v4.53.3

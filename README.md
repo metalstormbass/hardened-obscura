@@ -20,6 +20,7 @@ upstream reference preserved as a comment.
 | `chuhlomin-render-template` | chuhlomin/render-template | v1.12 | mutable Docker tag pinned to immutable image digest | [HARDENING.md](https://github.com/chainguard-actions/chuhlomin-render-template/blob/b26f3d75bfa3878230f2a7aa101b39000a7331c1/HARDENING.md) |
 | `jlumbroso-free-disk-space` | jlumbroso/free-disk-space | v1.3.1 | 8 high-severity script-injection findings fixed (raw `${{ inputs.* }}` in shell conditions moved to quoted env vars) | [HARDENING.md](https://github.com/chainguard-actions/jlumbroso-free-disk-space/blob/52482bc28020afba6a8cbc838b7ddbd9ab5dedc3/HARDENING.md) |
 | `AnimMouse-setup-ffmpeg` | AnimMouse/setup-ffmpeg | v1.2.5 | 6 findings fixed: unpinned refs, `$GITHUB_OUTPUT` injection, unquoted shell expansions | [HARDENING.md](https://github.com/chainguard-actions/AnimMouse-setup-ffmpeg/blob/34ee4b393c648bc7ef4251a66605d68655afad39/HARDENING.md) |
+| `imjasonh-setup-crane` | imjasonh/setup-crane | v0.5 | 6 findings fixed: script injection (`inputs.version`, `runner.os`, `github.token` interpolated in `run:` blocks), unpinned `uses:` refs, missing permissions | [HARDENING.md](https://github.com/chainguard-actions/imjasonh-setup-crane/blob/418bcec4843c23628bb9eaba6fd6ccc49054ba95/HARDENING.md) |
 | `actions-checkout` | actions/checkout | v7.0.1 | 7 findings fixed in CI workflows: script injection, unpinned refs, missing permissions | [HARDENING.md](https://github.com/chainguard-actions/actions-checkout/blob/ec419da8013e66e059571719dbfa6d1483438668/HARDENING.md) |
 
 Each report link points at a specific commit of the action; the workflows
@@ -28,8 +29,9 @@ reference the corresponding version tag.
 ## Workflows
 
 Two workflow files run the **same pipeline** — spell check (`typos`),
-required-file verification, `yq` release-version extraction, template
-rendering, and a media job that frees runner disk space, installs FFmpeg,
+required-file verification, a `crane` install, `yq` release-version
+extraction, template rendering, and a media job that frees runner disk
+space, installs FFmpeg,
 and generates/probes a test video — so the before/after can be compared
 side by side:
 

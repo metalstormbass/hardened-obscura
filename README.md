@@ -7,8 +7,8 @@ to your repository and secrets.
 
 Every third-party action in `.github/workflows/` comes from the
 [`chainguard-actions`](https://github.com/orgs/chainguard-actions/repositories)
-organization and is pinned to an immutable commit SHA, with the original
-upstream tag preserved as a comment per the Chainguard migration guidance.
+organization and is referenced by its mutable version tag, with the original
+upstream reference preserved as a comment.
 
 ## Hardened actions used
 
@@ -22,8 +22,8 @@ upstream tag preserved as a comment per the Chainguard migration guidance.
 | `AnimMouse-setup-ffmpeg` | AnimMouse/setup-ffmpeg | v1.2.5 | 6 findings fixed: unpinned refs, `$GITHUB_OUTPUT` injection, unquoted shell expansions | [HARDENING.md](https://github.com/chainguard-actions/AnimMouse-setup-ffmpeg/blob/34ee4b393c648bc7ef4251a66605d68655afad39/HARDENING.md) |
 | `actions-checkout` | actions/checkout | v7.0.1 | 7 findings fixed in CI workflows: script injection, unpinned refs, missing permissions | [HARDENING.md](https://github.com/chainguard-actions/actions-checkout/blob/ec419da8013e66e059571719dbfa6d1483438668/HARDENING.md) |
 
-Each report link points at the exact commit the workflows pin, so the
-report always describes the code that actually runs.
+Each report link points at a specific commit of the action; the workflows
+reference the corresponding version tag.
 
 ## Workflows
 
@@ -36,8 +36,8 @@ side by side:
 - **`pipeline-upstream.yml`** — the "before": original upstream community
   actions, referenced by mutable tags.
 - **`pipeline-hardened.yml`** — the "after": Chainguard hardened
-  equivalents, pinned to immutable commit SHAs with the upstream tag
-  preserved as a comment.
+  equivalents, referenced by their version tags with the upstream
+  reference preserved as a comment.
 
 ## Notes
 
